@@ -73,7 +73,7 @@ if (isAdmin()) {
     <title>Dashboard — ProjectFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="/php-pmapp/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
 </head>
 <body>
 <div class="app-layout">
@@ -85,7 +85,7 @@ if (isAdmin()) {
             <div class="d-flex align-items-center gap-3">
                 <span class="text-muted small">Welcome back, <strong><?= htmlspecialchars($user['name']) ?></strong></span>
                 <?php if (isAdmin()): ?>
-                    <a href="/php-pmapp/projects/create.php" class="btn btn-primary btn-sm px-3">
+                    <a href="/projects/create.php" class="btn btn-primary btn-sm px-3">
                         <i class="bi bi-plus-lg me-1"></i>New Project
                     </a>
                 <?php endif; ?>
@@ -162,7 +162,7 @@ if (isAdmin()) {
                     <div class="content-card">
                         <div class="card-header">
                             <span><i class="bi bi-check2-square me-2 text-primary"></i>Recent Tasks</span>
-                            <a href="/php-pmapp/tasks/index.php" class="btn btn-sm btn-outline-primary">View All</a>
+                            <a href="/tasks/index.php" class="btn btn-sm btn-outline-primary">View All</a>
                         </div>
                         <div class="card-body p-0">
                             <?php if ($recentTasks && $recentTasks->num_rows > 0): ?>
@@ -210,12 +210,12 @@ if (isAdmin()) {
                     <div class="content-card">
                         <div class="card-header">
                             <span><i class="bi bi-folder2-open me-2 text-primary"></i>Projects</span>
-                            <a href="/php-pmapp/projects/index.php" class="btn btn-sm btn-outline-primary">View All</a>
+                            <a href="/projects/index.php" class="btn btn-sm btn-outline-primary">View All</a>
                         </div>
                         <div class="card-body">
                             <?php if ($recentProjects->num_rows > 0): ?>
                                 <?php while ($proj = $recentProjects->fetch_assoc()): ?>
-                                <a href="/php-pmapp/projects/view.php?id=<?= $proj['id'] ?>" class="text-decoration-none">
+                                <a href="/projects/view.php?id=<?= $proj['id'] ?>" class="text-decoration-none">
                                     <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-2"
                                          style="background:#f9fafb;transition:.15s ease;"
                                          onmouseover="this.style.background='#eef2ff'"

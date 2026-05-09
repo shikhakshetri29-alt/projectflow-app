@@ -41,7 +41,7 @@ if (isAdmin()) {
     <title>Projects — ProjectFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="/php-pmapp/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
 </head>
 <body>
 <div class="app-layout">
@@ -51,7 +51,7 @@ if (isAdmin()) {
         <div class="topbar">
             <div class="topbar-title">Projects</div>
             <?php if (isAdmin()): ?>
-            <a href="/php-pmapp/projects/create.php" class="btn btn-primary btn-sm px-3">
+            <a href="/projects/create.php" class="btn btn-primary btn-sm px-3">
                 <i class="bi bi-plus-lg me-1"></i> New Project
             </a>
             <?php endif; ?>
@@ -78,7 +78,7 @@ if (isAdmin()) {
                                 <i class="bi bi-folder2"></i>
                             </div>
                             <?php if (isAdmin()): ?>
-                            <a href="/php-pmapp/projects/view.php?id=<?= $proj['id'] ?>"
+                            <a href="/projects/view.php?id=<?= $proj['id'] ?>"
                                class="btn btn-sm btn-outline-primary">Open</a>
                             <?php endif; ?>
                         </div>
@@ -91,12 +91,12 @@ if (isAdmin()) {
                             <span><i class="bi bi-people me-1"></i><?= (int)$proj['member_count'] ?> members</span>
                         </div>
                         <div class="mt-3 d-flex gap-2">
-                            <a href="/php-pmapp/tasks/index.php?project_id=<?= $proj['id'] ?>"
+                            <a href="/tasks/index.php?project_id=<?= $proj['id'] ?>"
                                class="btn btn-sm btn-primary flex-grow-1">
                                 <i class="bi bi-check2-square me-1"></i> View Tasks
                             </a>
                             <?php if (isAdmin()): ?>
-                            <a href="/php-pmapp/projects/members.php?id=<?= $proj['id'] ?>"
+                            <a href="/projects/members.php?id=<?= $proj['id'] ?>"
                                class="btn btn-sm btn-outline-secondary">
                                 <i class="bi bi-people"></i>
                             </a>
@@ -115,7 +115,7 @@ if (isAdmin()) {
                         <?= isAdmin() ? 'Create your first project to get started.' : 'You haven\'t been assigned to any projects yet.' ?>
                     </p>
                     <?php if (isAdmin()): ?>
-                    <a href="/php-pmapp/projects/create.php" class="btn btn-primary px-4">
+                    <a href="/projects/create.php" class="btn btn-primary px-4">
                         <i class="bi bi-plus-lg me-1"></i> Create First Project
                     </a>
                     <?php endif; ?>

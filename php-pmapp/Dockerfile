@@ -2,7 +2,6 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# PHP + MySQL server install karo
 RUN apt-get update && apt-get install -y \
     php8.1 \
     php8.1-cli \

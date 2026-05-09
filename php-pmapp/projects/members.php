@@ -4,10 +4,10 @@ require_once __DIR__ . '/../config/session.php';
 requireAdmin();
 
 $id = (int)($_GET['id'] ?? 0);
-if (!$id) { header('Location: /php-pmapp/projects/index.php'); exit; }
+if (!$id) { header('Location: /projects/index.php'); exit; }
 
 $project = $conn->query("SELECT * FROM projects WHERE id = $id")->fetch_assoc();
-if (!$project) { header('Location: /php-pmapp/projects/index.php'); exit; }
+if (!$project) { header('Location: /projects/index.php'); exit; }
 
 $message = '';
 $msgType = 'success';
@@ -52,7 +52,7 @@ while ($row = $res->fetch_assoc()) {
     <title>Manage Members — ProjectFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="/php-pmapp/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
 </head>
 <body>
 <div class="app-layout">
@@ -60,7 +60,7 @@ while ($row = $res->fetch_assoc()) {
     <div class="main-content">
         <div class="topbar">
             <div class="topbar-title">Manage Members — <?= htmlspecialchars($project['title']) ?></div>
-            <a href="/php-pmapp/projects/view.php?id=<?= $id ?>" class="btn btn-sm btn-outline-secondary">
+            <a href="/projects/view.php?id=<?= $id ?>" class="btn btn-sm btn-outline-secondary">
                 <i class="bi bi-arrow-left me-1"></i> Back to Project
             </a>
         </div>
@@ -104,7 +104,7 @@ while ($row = $res->fetch_assoc()) {
                                 <?php else: ?>
                                     <div class="alert alert-info">
                                         No member accounts exist yet.
-                                        <a href="/php-pmapp/auth/register.php" target="_blank">Create one</a>
+                                        <a href="/auth/register.php" target="_blank">Create one</a>
                                     </div>
                                 <?php endif; ?>
 

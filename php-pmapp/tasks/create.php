@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param('iisssi', $projectId, $assignedTo, $title, $description, $status, $createdBy);
         if ($stmt->execute()) {
             $stmt->close();
-            header("Location: /php-pmapp/tasks/index.php?project_id=$projectId&msg=Task+created+successfully");
+            header("Location: /tasks/index.php?project_id=$projectId&msg=Task+created+successfully");
             exit;
         } else {
             $error = 'Failed to create task.';
@@ -55,7 +55,7 @@ if ($pid) {
     <title>New Task — ProjectFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="/php-pmapp/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
 </head>
 <body>
 <div class="app-layout">
@@ -64,7 +64,7 @@ if ($pid) {
     <div class="main-content">
         <div class="topbar">
             <div class="topbar-title">Create New Task</div>
-            <a href="/php-pmapp/tasks/index.php" class="btn btn-sm btn-outline-secondary">
+            <a href="/tasks/index.php" class="btn btn-sm btn-outline-secondary">
                 <i class="bi bi-arrow-left me-1"></i> Back
             </a>
         </div>
@@ -151,7 +151,7 @@ if ($pid) {
                                     <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">
                                         <i class="bi bi-plus-circle me-1"></i> Create Task
                                     </button>
-                                    <a href="/php-pmapp/tasks/index.php" class="btn btn-outline-secondary px-4 py-2">
+                                    <a href="/tasks/index.php" class="btn btn-outline-secondary px-4 py-2">
                                         Cancel
                                     </a>
                                 </div>

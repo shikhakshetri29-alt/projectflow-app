@@ -25,27 +25,27 @@ function navActive(string $page, string $currentPage): string {
 
     <nav class="sidebar-nav">
         <div class="sidebar-section-label">Main</div>
-        <a href="/php-pmapp/dashboard/index.php" class="nav-link <?= ($dir === 'dashboard') ? 'active' : '' ?>">
+        <a href="/dashboard/index.php" class="nav-link <?= ($dir === 'dashboard') ? 'active' : '' ?>">
             <i class="bi bi-grid-1x2-fill"></i> Dashboard
         </a>
 
         <div class="sidebar-section-label">Work</div>
-        <a href="/php-pmapp/projects/index.php" class="nav-link <?= ($dir === 'projects') ? 'active' : '' ?>">
+        <a href="/projects/index.php" class="nav-link <?= ($dir === 'projects') ? 'active' : '' ?>">
             <i class="bi bi-folder2-open"></i> Projects
         </a>
-        <a href="/php-pmapp/tasks/index.php" class="nav-link <?= ($dir === 'tasks') ? 'active' : '' ?>">
+        <a href="/tasks/index.php" class="nav-link <?= ($dir === 'tasks') ? 'active' : '' ?>">
             <i class="bi bi-check2-square"></i> My Tasks
         </a>
 
         <?php if (isAdmin()): ?>
         <div class="sidebar-section-label">Admin</div>
-        <a href="/php-pmapp/projects/create.php" class="nav-link">
+        <a href="/projects/create.php" class="nav-link">
             <i class="bi bi-plus-circle"></i> New Project
         </a>
-        <a href="/php-pmapp/tasks/create.php" class="nav-link">
+        <a href="/tasks/create.php" class="nav-link">
             <i class="bi bi-plus-square"></i> New Task
         </a>
-        <a href="/php-pmapp/auth/register.php" class="nav-link">
+        <a href="/auth/register.php" class="nav-link">
             <i class="bi bi-person-plus"></i> Add User
         </a>
         <?php endif; ?>
@@ -59,7 +59,7 @@ function navActive(string $page, string $currentPage): string {
                 <div class="user-role"><?= $user['role'] ?></div>
             </div>
         </div>
-        <a href="/php-pmapp/auth/logout.php" class="nav-link mt-2 text-danger" style="color:#f87171!important">
+        <a href="/auth/logout.php" class="nav-link mt-2 text-danger" style="color:#f87171!important">
             <i class="bi bi-box-arrow-right"></i> Sign Out
         </a>
     </div>

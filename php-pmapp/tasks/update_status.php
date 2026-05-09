@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/session.php';
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /php-pmapp/dashboard/index.php');
+    header('Location: /dashboard/index.php');
     exit;
 }
 

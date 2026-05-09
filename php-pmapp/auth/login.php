@@ -3,7 +3,7 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/session.php';
 
 if (isLoggedIn()) {
-    header('Location: /php-pmapp/dashboard/index.php');
+    header('Location: /dashboard/index.php');
     exit;
 }
 
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['name']    = $user['name'];
             $_SESSION['email']   = $user['email'];
             $_SESSION['role']    = $user['role'];
-            header('Location: /php-pmapp/dashboard/index.php');
+            header('Location: /dashboard/index.php');
             exit;
         } else {
             $error = 'Invalid email or password.';
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Login — ProjectFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="/php-pmapp/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
 </head>
 <body class="auth-page">
 <div class="auth-wrapper">
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <hr class="my-4">
         <p class="text-center text-muted mb-0">
             Don't have an account?
-            <a href="/php-pmapp/auth/register.php" class="text-primary fw-semibold">Register here</a>
+            <a href="/auth/register.php" class="text-primary fw-semibold">Register here</a>
         </p>
 
         <div class="mt-4 p-3 bg-light rounded small text-muted">

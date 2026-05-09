@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/session.php';
 requireLogin();
 
 $id = (int)($_GET['id'] ?? 0);
-if (!$id) { header('Location: /php-pmapp/projects/index.php'); exit; }
+if (!$id) { header('Location: /projects/index.php'); exit; }
 
 if (isAdmin()) {
     $stmt = $conn->prepare("
@@ -28,7 +28,7 @@ $stmt->execute();
 $project = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
-if (!$project) { header('Location: /php-pmapp/projects/index.php'); exit; }
+if (!$project) { header('Location: /projects/index.php'); exit; }
 
 // Tasks in this project
 if (isAdmin()) {
@@ -89,7 +89,7 @@ $pct = ($stats['total'] > 0) ? round($stats['done'] / $stats['total'] * 100) : 0
     <title><?= htmlspecialchars($project['title']) ?> — ProjectFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="/php-pmapp/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
 </head>
 <body>
 <div class="app-layout">
@@ -103,10 +103,10 @@ $pct = ($stats['total'] > 0) ? round($stats['done'] / $stats['total'] * 100) : 0
             </div>
             <?php if (isAdmin()): ?>
             <div class="d-flex gap-2">
-                <a href="/php-pmapp/tasks/create.php?project_id=<?= $id ?>" class="btn btn-primary btn-sm px-3">
+                <a href="/tasks/create.php?project_id=<?= $id ?>" class="btn btn-primary btn-sm px-3">
                     <i class="bi bi-plus-lg me-1"></i> Add Task
                 </a>
-                <a href="/php-pmapp/projects/members.php?id=<?= $id ?>" class="btn btn-outline-secondary btn-sm">
+                <a href="/projects/members.php?id=<?= $id ?>" class="btn btn-outline-secondary btn-sm">
                     <i class="bi bi-people me-1"></i> Members
                 </a>
             </div>
@@ -162,7 +162,7 @@ $pct = ($stats['total'] > 0) ? round($stats['done'] / $stats['total'] * 100) : 0
                         <div class="card-header">
                             <span><i class="bi bi-check2-square me-2 text-primary"></i>Tasks</span>
                             <?php if (isAdmin()): ?>
-                            <a href="/php-pmapp/tasks/create.php?project_id=<?= $id ?>" class="btn btn-sm btn-primary">
+                            <a href="/tasks/create.php?project_id=<?= $id ?>" class="btn btn-sm btn-primary">
                                 <i class="bi bi-plus-lg me-1"></i> Add Task
                             </a>
                             <?php endif; ?>
@@ -231,7 +231,7 @@ $pct = ($stats['total'] > 0) ? round($stats['done'] / $stats['total'] * 100) : 0
                                     <i class="bi bi-check2-square d-block"></i>
                                     <p>No tasks in this project yet.</p>
                                     <?php if (isAdmin()): ?>
-                                    <a href="/php-pmapp/tasks/create.php?project_id=<?= $id ?>" class="btn btn-primary btn-sm mt-2">Add First Task</a>
+                                    <a href="/tasks/create.php?project_id=<?= $id ?>" class="btn btn-primary btn-sm mt-2">Add First Task</a>
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>
@@ -267,7 +267,7 @@ $pct = ($stats['total'] > 0) ? round($stats['done'] / $stats['total'] * 100) : 0
                                 </div>
                             <?php endif; ?>
                             <?php if (isAdmin()): ?>
-                            <a href="/php-pmapp/projects/members.php?id=<?= $id ?>" class="btn btn-sm btn-outline-primary w-100 mt-2">
+                            <a href="/projects/members.php?id=<?= $id ?>" class="btn btn-sm btn-outline-primary w-100 mt-2">
                                 <i class="bi bi-person-plus me-1"></i> Manage Members
                             </a>
                             <?php endif; ?>

@@ -9,7 +9,7 @@ function isLoggedIn() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        header('Location: /php-pmapp/auth/login.php');
+        header('Location: /auth/login.php');
         exit;
     }
 }
@@ -17,7 +17,7 @@ function requireLogin() {
 function requireAdmin() {
     requireLogin();
     if ($_SESSION['role'] !== 'admin') {
-        header('Location: /php-pmapp/dashboard/index.php?error=access_denied');
+        header('Location: /dashboard/index.php?error=access_denied');
         exit;
     }
 }

@@ -1304,23 +1304,99 @@ hr {
     }
 
     /* Table scroll */
-.table-responsive { 
-    overflow-x: auto !important; 
-    -webkit-overflow-scrolling: touch !important; 
-}
-
-.table { 
-    min-width: 600px !important; 
-}
-
-.table td { 
+.table-responsive { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+.table { min-width: 600px !important; }
+.table td {
     white-space: normal !important;
-    word-break: break-word !important;
-    overflow-wrap: break-word !important;
 }
 
-@media (max-width: 380px) {
-    .stat-grid { grid-template-columns: 1fr !important; }
+   # Mobile Text Cutting Fix for Your ProjectFlow UI
+
+Aapke mobile view me jo text cut ho raha hai, uska main reason hai:
+
+* `.table td { white-space: nowrap !important; }`
+* Sidebar/table/card widths fixed hain
+* Long project names wrap nahi ho rahe
+* Horizontal overflow properly handle nahi ho raha
+
+Neeche diye gaye CSS fixes ko **aapki current CSS file ke bilkul END me paste** kar dijiye.
+
+---
+
+# ✅ FINAL WORKING MOBILE FIX CSS
+
+Ye updated fix hai jo specifically aapke screenshot wale issue ko solve karega.
+
+````css
+/* =========================================
+   FINAL WORKING MOBILE FIX
+========================================= */
+
+@media (max-width: 768px) {
+
+    /* Main content */
+    .main-content {
+        width: 100% !important;
+        margin-left: 0 !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Page body */
+    .page-body {
+        padding: 10px !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Content cards */
+    .content-card {
+        width: 100% !important;
+        overflow: hidden !important;
+        border-radius: 24px !important;
+    }
+
+    /* TABLE FIX */
+    .table-responsive {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .table {
+        width: 100% !important;
+        min-width: 100% !important;
+        table-layout: auto !important;
+    }
+
+    /* VERY IMPORTANT */
+    .table td,
+    .table th {
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+        font-size: 14px !important;
+        padding: 18px 12px !important;
+        line-height: 1.5 !important;
+        vertical-align: top !important;
+    }
+
+    /* Project badges */
+    .status-badge,
+    .badge,
+    .table td span {
+        white-space: normal !important;
+        display: inline-block !important;
+        max-width: 100% !important;
+        word-break: break-word !important;
+    }
+
+    /* Remove forced nowrap */
+    * {
+        max-width: 100%;
+    }
+
+    body {
+        overflow-x: hidden !important;
+    }
 }
 /* =========================================
    FINAL MOBILE TEXT CUT FIX
@@ -1328,17 +1404,20 @@ hr {
 
 @media (max-width: 768px) {
 
+    /* Main content full width */
     .main-content {
         width: 100% !important;
         margin-left: 0 !important;
         overflow-x: hidden !important;
     }
 
+    /* Page spacing */
     .page-body {
         padding: 12px !important;
         overflow-x: hidden !important;
     }
 
+    /* Card fix */
     .content-card,
     .project-card,
     .stat-card {
@@ -1346,6 +1425,7 @@ hr {
         overflow: hidden !important;
     }
 
+    /* Table responsive fix */
     .table-responsive {
         width: 100% !important;
         overflow-x: auto !important;
@@ -1353,12 +1433,14 @@ hr {
         border-radius: 18px;
     }
 
+    /* Table layout */
     .table {
         width: 100% !important;
         min-width: unset !important;
         table-layout: fixed !important;
     }
 
+    /* Table cells */
     .table th,
     .table td {
         white-space: normal !important;
@@ -1369,26 +1451,31 @@ hr {
         vertical-align: top !important;
     }
 
+    /* Project column width */
     .table td:last-child,
     .table th:last-child {
         width: 42% !important;
     }
 
+    /* Task column width */
     .table td:first-child,
     .table th:first-child {
         width: 58% !important;
     }
 
+    /* Badge text fix */
     .status-badge {
         white-space: normal !important;
         text-align: center;
         line-height: 1.3;
     }
 
+    /* Topbar spacing */
     .topbar {
         padding-left: 60px !important;
     }
 
+    /* Prevent body horizontal scroll */
     body {
         overflow-x: hidden !important;
     }

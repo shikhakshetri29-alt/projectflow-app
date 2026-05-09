@@ -6,7 +6,6 @@ requireLogin();
 $user = getCurrentUser();
 
 if (isAdmin()) {
-    // Admin sees global stats
     $stats = $conn->query("
         SELECT
             (SELECT COUNT(*) FROM projects)                        AS total_projects,
@@ -15,7 +14,6 @@ if (isAdmin()) {
             (SELECT COUNT(*) FROM tasks WHERE status='pending')    AS pending_tasks
     ")->fetch_assoc();
 
-    // Recent tasks
     $recentTasks = $conn->query("
         SELECT t.*, p.title AS project_title, u.name AS assignee_name
         FROM tasks t
@@ -25,7 +23,6 @@ if (isAdmin()) {
         LIMIT 8
     ");
 
-    // Recent projects
     $recentProjects = $conn->query("
         SELECT p.*, u.name AS creator_name,
                (SELECT COUNT(*) FROM tasks WHERE project_id = p.id) AS task_count
@@ -35,7 +32,6 @@ if (isAdmin()) {
         LIMIT 6
     ");
 } else {
-    // Member sees own stats
     $uid = $user['id'];
     $stmt = $conn->prepare("
         SELECT
@@ -64,6 +60,12 @@ if (isAdmin()) {
 
     $recentProjects = null;
 }
+
+// Fetch task rows into array so we can use in both table and cards
+$taskRows = [];
+if ($recentTasks && $recentTasks->num_rows > 0) {
+    while ($t = $recentTasks->fetch_assoc()) $taskRows[] = $t;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -74,6 +76,84 @@ if (isAdmin()) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
+    <style>
+        /* ── MOBILE / DESKTOP TOGGLE ── */
+        @media (max-width: 768px) {
+            .desktop-table { display: none !important; }
+            .mobile-cards  { display: block !important; }
+
+            /* Stat grid — 2 columns on mobile */
+            .stat-grid-row > div {
+                width: 50% !important;
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+            }
+
+            /* Topbar welcome text hide */
+            .topbar .welcome-text { display: none !important; }
+
+            /* Topbar button chota */
+            .topbar .btn {
+                padding: 6px 12px !important;
+                font-size: 0.78rem !important;
+                width: auto !important;
+            }
+        }
+        @media (min-width: 769px) {
+            .desktop-table { display: table !important; }
+            .mobile-cards  { display: none !important; }
+        }
+
+        /* ── Task Card (Mobile) ── */
+        .dash-task-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(148,163,184,0.15);
+            box-shadow: 0 2px 8px rgba(99,102,241,0.06);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .dash-task-card:hover {
+            box-shadow: 0 6px 18px rgba(99,102,241,0.12);
+            transform: translateY(-2px);
+        }
+        .dash-task-card .task-info { flex: 1; min-width: 0; }
+        .dash-task-card .task-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #0f172a;
+            margin-bottom: 5px;
+            word-break: break-word;
+        }
+        .dash-task-card .task-project {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+        .dash-task-card .task-project .badge {
+            font-size: 0.72rem;
+            padding: 3px 8px;
+        }
+        .dash-task-card .task-assignee {
+            font-size: 0.73rem;
+            color: #94a3b8;
+        }
+        .dash-task-card .task-status { flex-shrink: 0; }
+
+        /* View All button mobile */
+        @media (max-width: 768px) {
+            .card-header .btn {
+                padding: 5px 12px !important;
+                font-size: 0.78rem !important;
+                width: auto !important;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="app-layout">
@@ -83,7 +163,7 @@ if (isAdmin()) {
         <div class="topbar">
             <div class="topbar-title">Dashboard</div>
             <div class="d-flex align-items-center gap-3">
-                <span class="text-muted small">Welcome back, <strong><?= htmlspecialchars($user['name']) ?></strong></span>
+                <span class="text-muted small welcome-text">Welcome back, <strong><?= htmlspecialchars($user['name']) ?></strong></span>
                 <?php if (isAdmin()): ?>
                     <a href="/projects/create.php" class="btn btn-primary btn-sm px-3">
                         <i class="bi bi-plus-lg me-1"></i>New Project
@@ -93,8 +173,9 @@ if (isAdmin()) {
         </div>
 
         <div class="page-body">
-            <!-- Stat Cards -->
-            <div class="row g-4 mb-4">
+
+            <!-- ══ Stat Cards ══ -->
+            <div class="row g-3 mb-4 stat-grid-row">
                 <div class="col-sm-6 col-xl-3">
                     <div class="stat-card">
                         <div class="stat-icon purple"><i class="bi bi-folder2"></i></div>
@@ -133,7 +214,7 @@ if (isAdmin()) {
                 </div>
             </div>
 
-            <!-- Progress bar -->
+            <!-- ══ Progress Bar ══ -->
             <?php
             $pct = ($stats['total_tasks'] > 0)
                 ? round($stats['completed_tasks'] / $stats['total_tasks'] * 100)
@@ -157,7 +238,7 @@ if (isAdmin()) {
             </div>
 
             <div class="row g-4">
-                <!-- Recent Tasks -->
+                <!-- ══ Recent Tasks ══ -->
                 <div class="col-lg-<?= isAdmin() ? '7' : '12' ?>">
                     <div class="content-card">
                         <div class="card-header">
@@ -165,8 +246,10 @@ if (isAdmin()) {
                             <a href="/tasks/index.php" class="btn btn-sm btn-outline-primary">View All</a>
                         </div>
                         <div class="card-body p-0">
-                            <?php if ($recentTasks && $recentTasks->num_rows > 0): ?>
-                            <table class="table mb-0">
+                            <?php if (count($taskRows) > 0): ?>
+
+                            <!-- DESKTOP TABLE -->
+                            <table class="table mb-0 desktop-table">
                                 <thead>
                                     <tr>
                                         <th class="ps-4">Task</th>
@@ -176,7 +259,7 @@ if (isAdmin()) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php while ($task = $recentTasks->fetch_assoc()): ?>
+                                <?php foreach ($taskRows as $task): ?>
                                     <tr>
                                         <td class="ps-4 fw-semibold"><?= htmlspecialchars($task['title']) ?></td>
                                         <td><span class="badge bg-light text-dark border"><?= htmlspecialchars($task['project_title']) ?></span></td>
@@ -191,9 +274,42 @@ if (isAdmin()) {
                                             <?php endif; ?>
                                         </td>
                                     </tr>
-                                <?php endwhile; ?>
+                                <?php endforeach; ?>
                                 </tbody>
                             </table>
+
+                            <!-- MOBILE CARDS -->
+                            <div class="mobile-cards p-3">
+                                <?php foreach ($taskRows as $task): ?>
+                                <div class="dash-task-card">
+                                    <div class="task-info">
+                                        <div class="task-name"><?= htmlspecialchars($task['title']) ?></div>
+                                        <div class="task-project">
+                                            <span class="badge bg-light text-dark border">
+                                                <?= htmlspecialchars($task['project_title']) ?>
+                                            </span>
+                                        </div>
+                                        <?php if (isAdmin() && !empty($task['assignee_name'])): ?>
+                                        <div class="task-assignee">
+                                            <i class="bi bi-person me-1"></i><?= htmlspecialchars($task['assignee_name'] ?? '—') ?>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="task-status">
+                                        <?php if ($task['status'] === 'completed'): ?>
+                                            <span class="status-badge badge-completed" style="font-size:0.7rem;padding:4px 10px;">
+                                                <i class="bi bi-check-circle-fill"></i> Done
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="status-badge badge-pending" style="font-size:0.7rem;padding:4px 10px;">
+                                                <i class="bi bi-hourglass-split"></i> Pending
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+
                             <?php else: ?>
                                 <div class="empty-state">
                                     <i class="bi bi-inbox d-block"></i>
@@ -204,7 +320,7 @@ if (isAdmin()) {
                     </div>
                 </div>
 
-                <!-- Recent Projects (Admin only) -->
+                <!-- ══ Recent Projects (Admin only) ══ -->
                 <?php if (isAdmin() && $recentProjects): ?>
                 <div class="col-lg-5">
                     <div class="content-card">
@@ -244,10 +360,10 @@ if (isAdmin()) {
                     </div>
                 </div>
                 <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</div>
+            </div><!-- /row -->
+        </div><!-- /page-body -->
+    </div><!-- /main-content -->
+</div><!-- /app-layout -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

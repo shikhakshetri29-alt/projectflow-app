@@ -60,7 +60,7 @@ if (!isAdmin()) {
     <title>Tasks — ProjectFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/php-pmapp/assets/css/style.css" rel="stylesheet">
 </head>
 <body>
 <div class="app-layout">
@@ -70,7 +70,7 @@ if (!isAdmin()) {
         <div class="topbar">
             <div class="topbar-title"><?= isAdmin() ? 'All Tasks' : 'My Tasks' ?></div>
             <?php if (isAdmin()): ?>
-            <a href="/tasks/create.php" class="btn btn-primary btn-sm px-3">
+            <a href="/php-pmapp/tasks/create.php" class="btn btn-primary btn-sm px-3">
                 <i class="bi bi-plus-lg me-1"></i> New Task
             </a>
             <?php endif; ?>
@@ -132,38 +132,38 @@ if (!isAdmin()) {
                         <tbody>
                         <?php while ($task = $tasks->fetch_assoc()): ?>
                         <tr>
-                            <td class="ps-4">
+                            <td class="ps-4" data-label="Task">
                                 <div class="fw-semibold"><?= htmlspecialchars($task['title']) ?></div>
                                 <?php if ($task['description']): ?>
                                 <small class="text-muted"><?= htmlspecialchars(substr($task['description'], 0, 55)) ?><?= strlen($task['description']) > 55 ? '…' : '' ?></small>
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <a href="/projects/view.php?id=<?= $task['project_id'] ?>"
+                                <a href="/php-pmapp/projects/view.php?id=<?= $task['project_id'] ?>"
                                    class="badge bg-light text-dark border text-decoration-none">
                                     <?= htmlspecialchars($task['project_title']) ?>
                                 </a>
                             </td>
                             <?php if (isAdmin()): ?>
-                            <td class="text-muted small"><?= htmlspecialchars($task['assignee_name'] ?? 'Unassigned') ?></td>
+                            <td class="text-muted small" data-label="Assigned" ><?= htmlspecialchars($task['assignee_name'] ?? 'Unassigned') ?></td>
                             <?php endif; ?>
-                            <td>
+                            <td data-label="Status">
                                 <?php if ($task['status'] === 'completed'): ?>
                                     <span class="status-badge badge-completed"><i class="bi bi-check-circle-fill"></i> Completed</span>
                                 <?php else: ?>
                                     <span class="status-badge badge-pending"><i class="bi bi-hourglass-split"></i> Pending</span>
                                 <?php endif; ?>
                             </td>
-                            <td class="text-muted small"><?= date('M j, Y', strtotime($task['created_at'])) ?></td>
-                            <td>
+                            <td class="text-muted small" data-label="Date"><?= date('M j, Y', strtotime($task['created_at'])) ?></td>
+                            <td data-label="Action">
                                 <?php $canUpdate = isAdmin() || $task['assigned_to'] == $user['id']; ?>
                                 <?php if ($canUpdate): ?>
-                                <form method="POST" action="/tasks/update_status.php" style="display:inline;">
+                                <form method="POST" action="/php-pmapp/tasks/update_status.php" style="display:inline;">
                                     <input type="hidden" name="task_id" value="<?= $task['id'] ?>">
                                     <input type="hidden" name="status"
                                            value="<?= $task['status'] === 'pending' ? 'completed' : 'pending' ?>">
                                     <input type="hidden" name="redirect"
-                                           value="/tasks/index.php?project_id=<?= $projectId ?>&status=<?= urlencode($status) ?>">
+                                           value="/php-pmapp/tasks/index.php?project_id=<?= $projectId ?>&status=<?= urlencode($status) ?>">
                                     <button type="submit" class="btn btn-sm <?= $task['status'] === 'pending' ? 'btn-outline-success' : 'btn-outline-secondary' ?>">
                                         <?php if ($task['status'] === 'pending'): ?>
                                             <i class="bi bi-check2"></i> Done
@@ -184,7 +184,7 @@ if (!isAdmin()) {
                             <h6 class="fw-bold mb-1">No tasks found</h6>
                             <p>Try adjusting your filters.</p>
                             <?php if (isAdmin()): ?>
-                            <a href="/tasks/create.php" class="btn btn-primary btn-sm mt-2">Add a Task</a>
+                            <a href="/php-pmapp/tasks/create.php" class="btn btn-primary btn-sm mt-2">Add a Task</a>
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>

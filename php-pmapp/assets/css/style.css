@@ -1306,6 +1306,4 @@ hr {
     /* Table scroll */
 .table-responsive { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
 .table { min-width: 600px !important; }
-.table td {
-    white-space: normal !important;
-}
+.table td { white-space: nowrap !important; }

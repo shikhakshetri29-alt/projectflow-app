@@ -2,21 +2,20 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# PHP + MySQL server install karo
 RUN apt-get update && apt-get install -y \
-    apache2 \
     php8.1 \
-    libapache2-mod-php8.1 \
+    php8.1-cli \
     php8.1-mysql \
-    php8.1-mysqli \
-    php8.1-gd \
-    && a2enmod rewrite \
+    mysql-server \
     && apt-get clean
 
-COPY . /var/www/html/
+WORKDIR /app
 
-RUN chown -R www-data:www-data /var/www/html && \
-    chmod -R 755 /var/www/html
+COPY . /app/
 
-EXPOSE 80
+RUN chmod +x /app/start.sh
 
-CMD ["apache2ctl", "-D", "FOREGROUND"]
+EXPOSE 8080
+
+CMD ["/app/start.sh"]

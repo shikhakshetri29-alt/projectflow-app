@@ -1228,3 +1228,24 @@ hr {
         min-width: 700px;
     }
 }
+
+/* ── Topbar Mobile Fix ─────────────────────── */
+@media (max-width: 768px) {
+    .topbar {
+        padding-left: 70px !important;
+    }
+    
+    .mobile-menu-toggle {
+        top: 12px !important;
+        left: 12px !important;
+    }
+    
+    .stat-value {
+        font-family: 'Poppins', system-ui, sans-serif !important;
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0 !important;
+        color: #0f172a !important;
+        -webkit-text-fill-color: #0f172a !important;
+    }
+}

@@ -1228,18 +1228,55 @@ hr {
         min-width: 700px;
     }
 }
-
-/* ── Topbar Mobile Fix ─────────────────────── */
+/* ══ MOBILE COMPLETE FIX ══════════════════════ */
 @media (max-width: 768px) {
-    .topbar {
-        padding-left: 70px !important;
-    }
-    
+
+    /* Hamburger button position */
     .mobile-menu-toggle {
-        top: 12px !important;
-        left: 12px !important;
+        top: 10px !important;
+        left: 10px !important;
+        z-index: 200 !important;
     }
-    
+
+    /* Topbar layout fix */
+    .topbar {
+        padding: 10px 12px 10px 65px !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        min-height: 56px !important;
+    }
+
+    /* Title chota karo */
+    .topbar-title {
+        font-size: 1rem !important;
+        white-space: nowrap !important;
+    }
+
+    /* Welcome text hide karo mobile pe */
+    .topbar .text-muted.small {
+        display: none !important;
+    }
+
+    /* Button chota karo */
+    .topbar .btn {
+        padding: 6px 12px !important;
+        font-size: 0.78rem !important;
+        width: auto !important;
+        margin: 0 !important;
+    }
+
+    /* Main content full width */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Page body padding */
+    .page-body {
+        padding: 16px 12px !important;
+    }
+
+    /* Numbers fix */
     .stat-value {
         font-family: 'Poppins', system-ui, sans-serif !important;
         font-size: 2rem !important;
@@ -1247,5 +1284,11 @@ hr {
         letter-spacing: 0 !important;
         color: #0f172a !important;
         -webkit-text-fill-color: #0f172a !important;
+    }
+
+    /* Stat cards single column */
+    .stat-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
     }
 }

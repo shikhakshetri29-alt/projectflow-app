@@ -32,10 +32,17 @@ $sql = "
 ";
 
 $stmt = $conn->prepare($sql);
-if ($params) $stmt->bind_param($types, ...$params);
+if ($params) {
+    $stmt->bind_param($types, ...$params);
+}
 $stmt->execute();
 $tasks = $stmt->get_result();
 $stmt->close();
+
+// Projects for filter
+$projectsForFilter = isAdmin()
+    ? $conn->query("SELECT id, title FROM projects ORDER BY title")
+    : $conn->prepare("SELECT p.id, p.title FROM projects p JOIN project_members pm ON pm.project_id=p.id AND pm.user_id=" . $user['id'] . " ORDER BY p.title") && false;
 
 if (!isAdmin()) {
     $fs = $conn->prepare("SELECT p.id, p.title FROM projects p JOIN project_members pm ON pm.project_id=p.id WHERE pm.user_id=? ORDER BY p.title");
@@ -43,12 +50,7 @@ if (!isAdmin()) {
     $fs->execute();
     $projectsForFilter = $fs->get_result();
     $fs->close();
-} else {
-    $projectsForFilter = $conn->query("SELECT id, title FROM projects ORDER BY title");
 }
-
-$taskRows = [];
-if ($tasks->num_rows > 0) while ($t = $tasks->fetch_assoc()) $taskRows[] = $t;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,57 +61,6 @@ if ($tasks->num_rows > 0) while ($t = $tasks->fetch_assoc()) $taskRows[] = $t;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
-    <style>
-        /* ══ TABLE: no cut on laptop ══ */
-        .tasks-table-wrap { width: 100%; overflow-x: auto; }
-        .tasks-table-wrap .table { min-width: 560px; table-layout: auto; }
-        .tasks-table-wrap .table td,
-        .tasks-table-wrap .table th { white-space: normal !important; word-break: break-word; }
-        .tasks-table-wrap .table td:first-child,
-        .tasks-table-wrap .table th:first-child { min-width: 160px; }
-
-        /* ══ MOBILE/DESKTOP TOGGLE ══ */
-        .desktop-only { display: block; }
-        .mobile-only  { display: none;  }
-        @media (max-width: 768px) {
-            .desktop-only { display: none !important; }
-            .mobile-only  { display: block !important; }
-            .topbar .btn  { padding: 6px 12px !important; font-size: 0.78rem !important; width: auto !important; margin: 0 !important; }
-            /* Filter form full width on mobile */
-            .filter-form .col-sm-5,
-            .filter-form .col-sm-4,
-            .filter-form .col-sm-3 { width: 100% !important; flex: 0 0 100% !important; max-width: 100% !important; }
-            .filter-form .btn { width: 100% !important; }
-        }
-
-        /* ══ MOBILE TASK CARDS ══ */
-        .task-m-card {
-            background: rgba(255,255,255,0.95);
-            border-radius: 16px;
-            padding: 15px 16px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(148,163,184,0.15);
-            box-shadow: 0 2px 8px rgba(99,102,241,0.07);
-            transition: all 0.25s ease;
-        }
-        .task-m-card:hover { box-shadow: 0 6px 20px rgba(99,102,241,0.13); transform: translateY(-2px); }
-        .task-m-card .tmc-title { font-weight: 700; font-size: 0.95rem; color: #0f172a; margin-bottom: 3px; }
-        .task-m-card .tmc-desc  { font-size: 0.81rem; color: #64748b; margin-bottom: 10px; }
-        .tmc-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: center; }
-        .tmc-meta .badge { font-size: 0.73rem; padding: 3px 9px; white-space: normal; }
-        .tmc-meta .tmc-assign { font-size: 0.78rem; color: #64748b; }
-        .tmc-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(148,163,184,0.12);
-        }
-        .tmc-date { font-size: 0.74rem; color: #94a3b8; }
-        .tmc-footer form .btn { width: auto !important; min-width: 95px; }
-    </style>
 </head>
 <body>
 <div class="app-layout">
@@ -119,7 +70,7 @@ if ($tasks->num_rows > 0) while ($t = $tasks->fetch_assoc()) $taskRows[] = $t;
         <div class="topbar">
             <div class="topbar-title"><?= isAdmin() ? 'All Tasks' : 'My Tasks' ?></div>
             <?php if (isAdmin()): ?>
-            <a href="/tasks/create.php" class="btn btn-primary btn-sm">
+            <a href="/tasks/create.php" class="btn btn-primary btn-sm px-3">
                 <i class="bi bi-plus-lg me-1"></i> New Task
             </a>
             <?php endif; ?>
@@ -132,10 +83,10 @@ if ($tasks->num_rows > 0) while ($t = $tasks->fetch_assoc()) $taskRows[] = $t;
                 </div>
             <?php endif; ?>
 
-            <!-- FILTERS -->
+            <!-- Filters -->
             <div class="content-card mb-4">
                 <div class="card-body py-3">
-                    <form method="GET" class="row g-2 align-items-end filter-form">
+                    <form method="GET" class="row g-2 align-items-end">
                         <div class="col-sm-5">
                             <label class="form-label small fw-semibold mb-1">Filter by Project</label>
                             <select name="project_id" class="form-select form-select-sm">
@@ -164,124 +115,69 @@ if ($tasks->num_rows > 0) while ($t = $tasks->fetch_assoc()) $taskRows[] = $t;
                 </div>
             </div>
 
-            <!-- TASKS -->
             <div class="content-card">
                 <div class="card-body p-0">
-                    <?php if (count($taskRows) > 0): ?>
-
-                    <!-- DESKTOP TABLE -->
-                    <div class="tasks-table-wrap desktop-only">
-                        <table class="table mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="ps-4">Task</th>
-                                    <th>Project</th>
-                                    <?php if (isAdmin()): ?><th>Assigned To</th><?php endif; ?>
-                                    <th>Status</th>
-                                    <th>Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <?php foreach ($taskRows as $task): ?>
+                    <?php if ($tasks->num_rows > 0): ?>
+                    <table class="table mb-0">
+                        <thead>
                             <tr>
-                                <td class="ps-4">
-                                    <div class="fw-semibold"><?= htmlspecialchars($task['title']) ?></div>
-                                    <?php if ($task['description']): ?>
-                                    <small class="text-muted"><?= htmlspecialchars(substr($task['description'], 0, 60)) ?><?= strlen($task['description']) > 60 ? '…' : '' ?></small>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <a href="/projects/view.php?id=<?= $task['project_id'] ?>"
-                                       class="badge bg-light text-dark border text-decoration-none" style="white-space:normal;">
-                                        <?= htmlspecialchars($task['project_title']) ?>
-                                    </a>
-                                </td>
-                                <?php if (isAdmin()): ?>
-                                <td class="text-muted small"><?= htmlspecialchars($task['assignee_name'] ?? 'Unassigned') ?></td>
-                                <?php endif; ?>
-                                <td>
-                                    <?php if ($task['status'] === 'completed'): ?>
-                                        <span class="status-badge badge-completed"><i class="bi bi-check-circle-fill"></i> Completed</span>
-                                    <?php else: ?>
-                                        <span class="status-badge badge-pending"><i class="bi bi-hourglass-split"></i> Pending</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="text-muted small"><?= date('M j, Y', strtotime($task['created_at'])) ?></td>
-                                <td>
-                                    <?php $canUpdate = isAdmin() || $task['assigned_to'] == $user['id']; ?>
-                                    <?php if ($canUpdate): ?>
-                                    <form method="POST" action="/tasks/update_status.php" style="display:inline;">
-                                        <input type="hidden" name="task_id" value="<?= $task['id'] ?>">
-                                        <input type="hidden" name="status" value="<?= $task['status'] === 'pending' ? 'completed' : 'pending' ?>">
-                                        <input type="hidden" name="redirect" value="/tasks/index.php?project_id=<?= $projectId ?>&status=<?= urlencode($status) ?>">
-                                        <button type="submit" class="btn btn-sm <?= $task['status'] === 'pending' ? 'btn-outline-success' : 'btn-outline-secondary' ?>">
-                                            <?php if ($task['status'] === 'pending'): ?>
-                                                <i class="bi bi-check2"></i> Done
-                                            <?php else: ?>
-                                                <i class="bi bi-arrow-counterclockwise"></i> Reopen
-                                            <?php endif; ?>
-                                        </button>
-                                    </form>
-                                    <?php endif; ?>
-                                </td>
+                                <th class="ps-4">Task</th>
+                                <th>Project</th>
+                                <?php if (isAdmin()): ?><th>Assigned To</th><?php endif; ?>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
                             </tr>
-                            <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- MOBILE CARDS -->
-                    <div class="mobile-only p-3">
-                        <?php foreach ($taskRows as $task): ?>
-                        <div class="task-m-card">
-                            <div class="tmc-title"><?= htmlspecialchars($task['title']) ?></div>
-                            <?php if ($task['description']): ?>
-                            <div class="tmc-desc"><?= htmlspecialchars(substr($task['description'], 0, 90)) ?><?= strlen($task['description']) > 90 ? '…' : '' ?></div>
-                            <?php endif; ?>
-
-                            <div class="tmc-meta">
+                        </thead>
+                        <tbody>
+                        <?php while ($task = $tasks->fetch_assoc()): ?>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-semibold"><?= htmlspecialchars($task['title']) ?></div>
+                                <?php if ($task['description']): ?>
+                                <small class="text-muted"><?= htmlspecialchars(substr($task['description'], 0, 55)) ?><?= strlen($task['description']) > 55 ? '…' : '' ?></small>
+                                <?php endif; ?>
+                            </td>
+                            <td>
                                 <a href="/projects/view.php?id=<?= $task['project_id'] ?>"
                                    class="badge bg-light text-dark border text-decoration-none">
-                                    <i class="bi bi-folder2 me-1"></i><?= htmlspecialchars($task['project_title']) ?>
+                                    <?= htmlspecialchars($task['project_title']) ?>
                                 </a>
-                                <?php if (isAdmin()): ?>
-                                <span class="tmc-assign">
-                                    <i class="bi bi-person me-1"></i><?= htmlspecialchars($task['assignee_name'] ?? 'Unassigned') ?>
-                                </span>
+                            </td>
+                            <?php if (isAdmin()): ?>
+                            <td class="text-muted small"><?= htmlspecialchars($task['assignee_name'] ?? 'Unassigned') ?></td>
+                            <?php endif; ?>
+                            <td>
+                                <?php if ($task['status'] === 'completed'): ?>
+                                    <span class="status-badge badge-completed"><i class="bi bi-check-circle-fill"></i> Completed</span>
+                                <?php else: ?>
+                                    <span class="status-badge badge-pending"><i class="bi bi-hourglass-split"></i> Pending</span>
                                 <?php endif; ?>
-                            </div>
-
-                            <div class="tmc-footer">
-                                <div class="d-flex align-items-center gap-2 flex-wrap">
-                                    <?php if ($task['status'] === 'completed'): ?>
-                                        <span class="status-badge badge-completed"><i class="bi bi-check-circle-fill"></i> Completed</span>
-                                    <?php else: ?>
-                                        <span class="status-badge badge-pending"><i class="bi bi-hourglass-split"></i> Pending</span>
-                                    <?php endif; ?>
-                                    <span class="tmc-date"><i class="bi bi-calendar3 me-1"></i><?= date('M j, Y', strtotime($task['created_at'])) ?></span>
-                                </div>
-
+                            </td>
+                            <td class="text-muted small"><?= date('M j, Y', strtotime($task['created_at'])) ?></td>
+                            <td>
                                 <?php $canUpdate = isAdmin() || $task['assigned_to'] == $user['id']; ?>
                                 <?php if ($canUpdate): ?>
-                                <form method="POST" action="/tasks/update_status.php">
+                                <form method="POST" action="/tasks/update_status.php" style="display:inline;">
                                     <input type="hidden" name="task_id" value="<?= $task['id'] ?>">
-                                    <input type="hidden" name="status" value="<?= $task['status'] === 'pending' ? 'completed' : 'pending' ?>">
-                                    <input type="hidden" name="redirect" value="/tasks/index.php?project_id=<?= $projectId ?>&status=<?= urlencode($status) ?>">
+                                    <input type="hidden" name="status"
+                                           value="<?= $task['status'] === 'pending' ? 'completed' : 'pending' ?>">
+                                    <input type="hidden" name="redirect"
+                                           value="/tasks/index.php?project_id=<?= $projectId ?>&status=<?= urlencode($status) ?>">
                                     <button type="submit" class="btn btn-sm <?= $task['status'] === 'pending' ? 'btn-outline-success' : 'btn-outline-secondary' ?>">
                                         <?php if ($task['status'] === 'pending'): ?>
-                                            <i class="bi bi-check2"></i> Mark Done
+                                            <i class="bi bi-check2"></i> Done
                                         <?php else: ?>
                                             <i class="bi bi-arrow-counterclockwise"></i> Reopen
                                         <?php endif; ?>
                                     </button>
                                 </form>
                                 <?php endif; ?>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                        </tbody>
+                    </table>
                     <?php else: ?>
                         <div class="empty-state">
                             <i class="bi bi-check2-square d-block"></i>

@@ -166,7 +166,8 @@ if (isAdmin()) {
                         </div>
                         <div class="card-body p-0">
                             <?php if ($recentTasks && $recentTasks->num_rows > 0): ?>
-                            <table class="table mb-0">
+                            <div class="table-responsive">
+                              <table class="table mb-0">
                                 <thead>
                                     <tr>
                                         <th class="ps-4">Task</th>
@@ -194,7 +195,9 @@ if (isAdmin()) {
                                 <?php endwhile; ?>
                                 </tbody>
                             </table>
+                            </div>
                             <?php else: ?>
+                
                                 <div class="empty-state">
                                     <i class="bi bi-inbox d-block"></i>
                                     <p>No tasks yet.</p>

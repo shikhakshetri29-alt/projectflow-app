@@ -479,11 +479,14 @@ min-width: 360px;
 .main-content {
     margin-left: 360px;
 
-    width: calc(100vw - 360px);
-
-    overflow-x: auto;
-
     flex: 1;
+
+    width: 100%;
+
+    min-width: 0;
+
+    overflow-x: hidden;
+
     display: flex;
     flex-direction: column;
 
@@ -1199,15 +1202,6 @@ hr {
         justify-content: center;
     }
 
-       .sidebar {
-    width: 360px;
-    min-width: 360px;
-        transform: translateX(-100%);
-    }
-
-    .sidebar.sidebar-open {
-        transform: translateX(0);
-    }
 
     .main-content {
         margin-left: 0;
@@ -1309,6 +1303,8 @@ hr {
 .table-responsive { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
 .table { min-width: 600px !important; }
 .table td { white-space: nowrap !important; }
+
+}
    
 @media (max-width: 768px) {
 
@@ -1318,42 +1314,81 @@ hr {
         overflow-x: hidden;
     }
 
-    * {
-        min-width: 0;
-    }
+    .main-content *,
+.page-body *,
+.card-grid *,
+.stat-grid * {
+    min-width: 0;
+}
 
     .main-content {
-        margin-left: 0 !important;
-        width: 100% !important;
-        overflow-x: hidden !important;
-    }
+    margin-left: 0 !important;
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    overflow-x: hidden !important;
+}
 
     .sidebar {
-        width: 80% !important;
-        max-width: 280px !important;
-        min-width: unset !important;
-    }
+    position: fixed !important;
 
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 80% !important;
+    max-width: 280px !important;
+    min-width: 0 !important;
+
+    height: 100vh !important;
+
+    overflow-x: hidden !important;
+
+    transform: translateX(-100%) !important;
+
+    transition: transform .3s ease !important;
+
+    z-index: 200 !important;
+}
     .sidebar-brand {
-        width: 100%;
-        overflow: hidden;
-    }
+    width: 100%;
+    min-width: 0;
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 18px 16px;
+}
 
     .brand-title {
-        font-size: clamp(1rem, 4vw, 1.4rem) !important;
 
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
 
-        min-width: 0;
-    }
+    font-size: clamp(.95rem, 4vw, 1.2rem) !important;
 
-    .content-card,
-    .project-card,
-    .stat-card {
-        overflow: hidden;
-    }
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    line-height: 1.2;
+}
+
+.sidebar-nav .nav-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.content-card,
+.project-card,
+.stat-card {
+    overflow: hidden;
+}
 
     h1, h2, h3, h4, h5, h6, p, span {
         overflow-wrap: break-word;
@@ -1367,5 +1402,26 @@ hr {
 
     .table {
         min-width: 600px !important;
+
     }
+
+   .page-body {
+    width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
 }
+
+.card-grid,
+.stat-grid {
+    width: 100%;
+    min-width: 0;
+}
+}
+
+
+
+
+
+
+
+

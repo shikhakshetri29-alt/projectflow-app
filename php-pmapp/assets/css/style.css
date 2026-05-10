@@ -1548,5 +1548,98 @@ video {
     height: 6px;
 }
 
+/* =========================================
+   TASK TABLE MOBILE FIX
+========================================= */
+
+@media (max-width: 768px) {
+
+    .content-card {
+        overflow: hidden !important;
+        border-radius: 22px !important;
+    }
+
+    .card-body.p-0 {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .table-responsive {
+        width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .table {
+        min-width: 720px !important;
+        width: max-content !important;
+        margin: 0 !important;
+        table-layout: auto !important;
+        border-collapse: collapse !important;
+    }
+
+    .table thead {
+        display: table-header-group !important;
+    }
+
+    .table tbody {
+        display: table-row-group !important;
+    }
+
+    .table tr {
+        display: table-row !important;
+    }
+
+    .table th,
+    .table td {
+        display: table-cell !important;
+        white-space: nowrap !important;
+        vertical-align: middle !important;
+    }
+
+    .table th {
+        font-size: 11px !important;
+        padding: 14px 16px !important;
+    }
+
+    .table td {
+        font-size: 13px !important;
+        padding: 16px !important;
+    }
+
+    /* TASK */
+    .table th:nth-child(1),
+    .table td:nth-child(1) {
+        min-width: 240px !important;
+    }
+
+    /* PROJECT */
+    .table th:nth-child(2),
+    .table td:nth-child(2) {
+        min-width: 170px !important;
+    }
+
+    /* ASSIGNED */
+    .table th:nth-child(3),
+    .table td:nth-child(3) {
+        min-width: 150px !important;
+    }
+
+    /* STATUS */
+    .table th:nth-child(4),
+    .table td:nth-child(4) {
+        min-width: 150px !important;
+    }
+
+    .status-badge {
+        white-space: nowrap !important;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        height: 6px;
+    }
+}
+
 
 

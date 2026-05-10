@@ -290,7 +290,12 @@ min-width: 360px;
 }
 
 .sidebar-brand {
+
     overflow: hidden;
+
+    width: 100%;
+    min-width: 0;
+
     padding: 20px;
 
     border-bottom: 1px solid var(--border-subtle);
@@ -306,31 +311,28 @@ min-width: 360px;
 
 .brand-title {
 
-    white-space: nowrap;
-flex-shrink: 0;
-font-size: 42px;
     font-family: 'Syne', sans-serif;
-
-    font-size: 1.5rem;
+    font-size: clamp(1rem, 4vw, 1.5rem);
     font-weight: 800;
 
     background: linear-gradient(135deg,#6366f1,#8b5cf6);
 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
     background-clip: text;
 
-    line-height: 1;
-
-    white-space: nowrap;
+    line-height: 1.1;
 
     margin: 0;
 
-    display: flex;
-    align-items: center;
+    flex: 1;
+    min-width: 0;
 
-    
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    display: block;
 }
 
 

@@ -1300,10 +1300,21 @@ hr {
     }
 
     /* Table scroll */
-.table-responsive { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-.table { min-width: 600px !important; }
-.table td { white-space: nowrap !important; }
+.table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
 
+.table {
+    width: 100% !important;
+    min-width: unset !important;
+}
+
+.table th,
+.table td {
+    white-space: normal !important;
+    word-break: break-word !important;
+}
 }
    
 @media (max-width: 768px) {
@@ -1327,8 +1338,6 @@ hr {
     width: 100% !important;
 
     min-width: 0 !important;
-
-    overflow-x: hidden !important;
 }
 
     .sidebar {
@@ -1406,12 +1415,12 @@ hr {
 
 .table th,
 .table td {
-    white-space: nowrap !important;
+    white-space: normal !important;
+    word-break: break-word !important;
 }
    .page-body {
     width: 100%;
     min-width: 0;
-    overflow-x: hidden;
 }
 
 .card-grid,
@@ -1440,7 +1449,79 @@ video {
     margin-left: 0 !important;
     margin-right: 0 !important;
 }
+@media (max-width: 768px) {
 
+    /* CARD */
+    .content-card {
+        overflow: hidden !important;
+        border-radius: 22px !important;
+    }
+
+    /* TABLE */
+    .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+    .table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse;
+}
+
+    /* HEADER */
+    .table th {
+        font-size: 10px !important;
+        padding: 12px 8px !important;
+        white-space: normal !important;
+        word-break: break-word;
+        text-align: left;
+    }
+
+    /* BODY */
+    .table td {
+        font-size: 13px !important;
+        padding: 14px 8px !important;
+        white-space: normal !important;
+        word-break: break-word;
+        vertical-align: middle;
+    }
+
+    /* COLUMN WIDTHS */
+    .table th:nth-child(1),
+    .table td:nth-child(1) {
+        width: 28%;
+    }
+
+    .table th:nth-child(2),
+    .table td:nth-child(2) {
+        width: 32%;
+    }
+
+    .table th:nth-child(3),
+    .table td:nth-child(3) {
+        width: 20%;
+    }
+
+    .table th:nth-child(4),
+    .table td:nth-child(4) {
+        width: 20%;
+    }
+
+    /* STATUS BADGE */
+    .status-badge {
+        font-size: 11px !important;
+        padding: 6px 10px !important;
+        white-space: nowrap !important;
+    }
+
+    /* PROJECT TAG */
+    .table td .badge,
+    .table td span {
+        font-size: 10px !important;
+    }
+
+}
 
 
 

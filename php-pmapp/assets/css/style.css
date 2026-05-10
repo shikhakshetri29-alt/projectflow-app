@@ -1396,19 +1396,17 @@ hr {
     }
 
     .table-responsive {
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .table {
-    width: 100% !important;
-    min-width: unset !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
 }
 
-   .table th,
+.table {
+    min-width: 650px !important;
+}
+
+.table th,
 .table td {
-    white-space: normal !important;
-    word-break: break-word;
+    white-space: nowrap !important;
 }
    .page-body {
     width: 100%;

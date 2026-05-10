@@ -1449,81 +1449,104 @@ video {
     margin-left: 0 !important;
     margin-right: 0 !important;
 }
+/* =========================================
+   MOBILE TABLE FIX — HORIZONTAL SCROLL
+========================================= */
+
 @media (max-width: 768px) {
 
-    /* CARD */
-    .content-card {
-        overflow: hidden !important;
-        border-radius: 22px !important;
+    /* TABLE CONTAINER */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
     }
 
     /* TABLE */
-    .table-responsive {
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-}
-
     .table {
-    width: 100% !important;
-    table-layout: fixed !important;
-    border-collapse: collapse;
-}
+        min-width: 950px !important;
+        width: max-content !important;
+        border-collapse: collapse;
+    }
 
-    /* HEADER */
+    /* TABLE HEADER */
     .table th {
-        font-size: 10px !important;
-        padding: 12px 8px !important;
-        white-space: normal !important;
-        word-break: break-word;
+        font-size: 11px !important;
+        padding: 12px 14px !important;
+        white-space: nowrap !important;
+        word-break: normal !important;
         text-align: left;
     }
 
-    /* BODY */
+    /* TABLE BODY */
     .table td {
         font-size: 13px !important;
-        padding: 14px 8px !important;
-        white-space: normal !important;
-        word-break: break-word;
+        padding: 14px !important;
+        white-space: nowrap !important;
+        word-break: normal !important;
         vertical-align: middle;
     }
 
     /* COLUMN WIDTHS */
+
+    /* TASK */
     .table th:nth-child(1),
     .table td:nth-child(1) {
-        width: 28%;
+        min-width: 220px;
     }
 
+    /* PROJECT */
     .table th:nth-child(2),
     .table td:nth-child(2) {
-        width: 32%;
+        min-width: 180px;
     }
 
+    /* ASSIGNED TO */
     .table th:nth-child(3),
     .table td:nth-child(3) {
-        width: 20%;
+        min-width: 150px;
     }
 
+    /* STATUS */
     .table th:nth-child(4),
     .table td:nth-child(4) {
-        width: 20%;
+        min-width: 140px;
+    }
+
+    /* DATE */
+    .table th:nth-child(5),
+    .table td:nth-child(5) {
+        min-width: 130px;
+    }
+
+    /* ACTION */
+    .table th:nth-child(6),
+    .table td:nth-child(6) {
+        min-width: 140px;
     }
 
     /* STATUS BADGE */
     .status-badge {
         font-size: 11px !important;
-        padding: 6px 10px !important;
+        padding: 6px 12px !important;
+        white-space: nowrap !important;
+    }
+
+    /* BUTTON FIX */
+    .table .btn {
         white-space: nowrap !important;
     }
 
     /* PROJECT TAG */
     .table td .badge,
     .table td span {
-        font-size: 10px !important;
+        white-space: nowrap !important;
+        font-size: 11px !important;
     }
-
 }
-
-
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
 
 
 

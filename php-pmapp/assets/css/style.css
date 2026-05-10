@@ -1401,10 +1401,15 @@ hr {
     }
 
     .table {
-        min-width: 600px !important;
+    width: 100% !important;
+    min-width: unset !important;
+}
 
-    }
-
+   .table th,
+.table td {
+    white-space: normal !important;
+    word-break: break-word;
+}
    .page-body {
     width: 100%;
     min-width: 0;
@@ -1418,7 +1423,25 @@ hr {
 }
 }
 
+/* FINAL SAFETY FIX */
+img,
+svg,
+canvas,
+video {
+    max-width: 100%;
+    height: auto;
+}
 
+/* Flex overflow fix */
+* {
+    min-width: 0;
+}
+
+/* Bootstrap row overflow fix */
+.row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
 
 
 
